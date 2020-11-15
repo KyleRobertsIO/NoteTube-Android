@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NoteTube-Android</string>
+    <string name="documents_view_title">Documents</string>
 </resources>
