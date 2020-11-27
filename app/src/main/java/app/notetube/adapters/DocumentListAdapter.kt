@@ -1,8 +1,6 @@
 package app.notetube.adapters
 
 import android.content.Context
-import android.media.Image
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import app.notetube.MainActivity
 import app.notetube.R
+import app.notetube.enums.DocumentType
 import app.notetube.models.DocumentListItem
 
 class DocumentListAdapter(
@@ -59,7 +58,9 @@ class DocumentListAdapter(
         var documentItem = dirDocuments[position]
 
         viewHolder.listItemName?.text = documentItem.name
-        //viewHolder.photo?.setImageURI(Uri.parse(gift.photoPath))
+        if (documentItem.documentType == DocumentType.DOCUMENT_DIRECTORY) {
+            viewHolder.listItemIcon?.setImageResource(R.drawable.ic_folder_black_18dp)
+        }
 
         return view as View
     }

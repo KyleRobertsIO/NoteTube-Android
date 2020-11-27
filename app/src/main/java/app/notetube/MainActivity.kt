@@ -1,5 +1,6 @@
 package app.notetube
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.ListView
@@ -24,10 +25,33 @@ class MainActivity : AppCompatActivity() {
 
         // Load list of folders and documents
         val documents = ArrayList<DocumentListItem>();
-        documents.add(DocumentListItem(1, "Intro To NodeJS", DocumentType.NOTE_DOCUMENT))
-        documents.add(DocumentListItem(2, "Figuring out how to solve AI problems easily", DocumentType.NOTE_DOCUMENT))
+        documents.add(
+            DocumentListItem(
+                1,
+                "Intro To NodeJS",
+                DocumentType.NOTE_DOCUMENT,
+                "pU9Q6oiQNd0"
+            )
+        )
+        documents.add(
+            DocumentListItem(
+                2,
+                "Flutter Basics",
+                DocumentType.NOTE_DOCUMENT,
+                "ZlUDnC_9wmg"
+            )
+        )
+
+        // Append data to listview
         val adapter = DocumentListAdapter(this, documents)
         documentListView.adapter = adapter
+
+        // Click listview item
+        documentListView.setOnItemClickListener { parent, view, position, id ->
+            val intent = Intent(this, notes_document::class.java)
+            intent.putExtra("VIDEO_DOCUMENT", documents.get(position))
+            startActivity(intent)
+        }
 
     }
 
