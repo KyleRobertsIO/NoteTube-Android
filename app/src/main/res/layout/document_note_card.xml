@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:background="#FFFFFF"
-        app:cardElevation="1dp"
-        app:contentPadding="8dp"
+        app:cardElevation="0dp"
+        app:contentPaddingBottom="10dp"
+        app:contentPaddingLeft="15dp"
+        app:contentPaddingRight="15dp"
+        app:contentPaddingTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@android:color/darker_gray"
+        app:strokeWidth="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,18 +33,17 @@
             tools:layout_editor_absoluteY="1dp">
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/noteTitleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:background="@color/backgroundColor"
                 android:ems="10"
                 android:hint="Note title"
                 android:inputType="text"
-                android:textColor="#000000"
-                android:textColorHint="@color/backgroundColor" />
+                android:textColor="#434343" />
 
             <EditText
-                android:id="@+id/editTextTextMultiLine"
+                android:id="@+id/noteBodyEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

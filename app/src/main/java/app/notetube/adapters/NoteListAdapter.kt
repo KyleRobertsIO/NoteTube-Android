@@ -22,8 +22,8 @@ class NoteListAdapter(
         var noteBody: EditText? = null
 
         init {
-            //this.listItemName = row?.findViewById(R.id.listItemName)
-            //this.listItemIcon = row?.findViewById(R.id.listItemIcon)
+            this.noteTitle = row?.findViewById(R.id.noteTitleEditText)
+            this.noteBody = row?.findViewById(R.id.noteBodyEditText)
         }
     }
 
@@ -54,7 +54,6 @@ class NoteListAdapter(
             viewHolder = NoteListAdapter.ViewHolder(view) as NoteListAdapter.ViewHolder
         }
 
-        //var documentItem = dirDocuments[position]
         var noteTitle: String = notes[position]
         var noteBody: String = "Example of body goes here."
 
