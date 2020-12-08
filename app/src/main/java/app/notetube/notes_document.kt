@@ -50,7 +50,11 @@ class notes_document : AppCompatActivity() {
 
         testBtn.setOnClickListener() {
             var dialog = NoteCardEditDialog()
-            dialog.show(supportFragmentManager, "testDialog")
+            val args : Bundle = Bundle()
+            args.putSerializable("NOTE", null)
+            dialog.arguments = args
+            dialog.show(supportFragmentManager, "Edit Note Dialog")
+
             /*val tranaction = supportFragmentManager.beginTransaction()
             tranaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             tranaction.add(android.R.id.content, dialog)

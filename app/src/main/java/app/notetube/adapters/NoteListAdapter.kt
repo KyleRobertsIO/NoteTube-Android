@@ -18,12 +18,12 @@ class NoteListAdapter(
 
     private class ViewHolder(row: View?) {
 
-        var noteTitle: EditText? = null
-        var noteBody: EditText? = null
+        var noteTitle: TextView? = null
+        var noteBody: TextView? = null
 
         init {
-            this.noteTitle = row?.findViewById(R.id.noteTitleEditText)
-            this.noteBody = row?.findViewById(R.id.noteBodyEditText)
+            this.noteTitle = row?.findViewById(R.id.noteTitleTextView)
+            this.noteBody = row?.findViewById(R.id.noteBodyTextView)
         }
     }
 
@@ -57,8 +57,8 @@ class NoteListAdapter(
         var noteTitle: String = notes[position]
         var noteBody: String = "Example of body goes here."
 
-        viewHolder.noteTitle?.setText(noteTitle, TextView.BufferType.EDITABLE)
-        viewHolder.noteBody?.setText(noteBody, TextView.BufferType.EDITABLE)
+        viewHolder.noteTitle?.setText(noteTitle)
+        viewHolder.noteBody?.setText(noteBody)
 
         return view as View
     }

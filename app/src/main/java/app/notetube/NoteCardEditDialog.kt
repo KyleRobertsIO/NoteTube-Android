@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import kotlinx.android.synthetic.main.note_card_edit_fragment.view.*
 
 class NoteCardEditDialog : DialogFragment() {
 
@@ -19,6 +20,20 @@ class NoteCardEditDialog : DialogFragment() {
             container,
             false
         )
+
+        val note = arguments?.getSerializable("NOTE")
+
+        // Handle dialog actions
+        rootView.saveNoteBtn.setOnClickListener()
+        {
+
+        }
+
+        rootView.cancelDialogBtn.setOnClickListener()
+        {
+            dismiss()
+        }
+
         return rootView
     }
 
