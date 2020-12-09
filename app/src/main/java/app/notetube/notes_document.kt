@@ -1,11 +1,17 @@
 package app.notetube
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.widget.Button
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import app.notetube.adapters.NoteListAdapter
 import app.notetube.models.DocumentListItem
 import app.notetube.models.api.Document
@@ -85,6 +91,11 @@ class notes_document : AppCompatActivity() {
 
 
         testBtn.setOnClickListener() {
+//            if (!allPermissionsGranted()) {
+//                ActivityCompat.requestPermissions(
+//                    this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+//            }
+
             var dialog = NoteCardEditDialog()
             val args : Bundle = Bundle()
             args.putSerializable("NOTE", null)
@@ -99,7 +110,17 @@ class notes_document : AppCompatActivity() {
         }
 
     }
+  
+    companion object { // Permissions
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.INTERNET)
+    }
 
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+  
     fun RequestDocumentById(documentId: Int) : Document? {
         // Create URI
         val url : String = getString(R.string.primary_url)
