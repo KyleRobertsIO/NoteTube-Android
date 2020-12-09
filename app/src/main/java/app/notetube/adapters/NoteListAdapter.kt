@@ -9,21 +9,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import app.notetube.MainActivity
 import app.notetube.R
+import app.notetube.models.api.Note
 import app.notetube.notes_document
 
 class NoteListAdapter(
     private var activity: notes_document,
-    private var notes: ArrayList<String>
+    private var notes: ArrayList<Note>
 ): BaseAdapter() {
 
     private class ViewHolder(row: View?) {
 
-        var noteTitle: EditText? = null
-        var noteBody: EditText? = null
+        var noteTitle: TextView? = null
+        var noteBody: TextView? = null
 
         init {
-            this.noteTitle = row?.findViewById(R.id.noteTitleEditText)
-            this.noteBody = row?.findViewById(R.id.noteBodyEditText)
+            this.noteTitle = row?.findViewById(R.id.noteTitleTextView)
+            this.noteBody = row?.findViewById(R.id.noteBodyTextView)
         }
     }
 
@@ -54,11 +55,11 @@ class NoteListAdapter(
             viewHolder = NoteListAdapter.ViewHolder(view) as NoteListAdapter.ViewHolder
         }
 
-        var noteTitle: String = notes[position]
-        var noteBody: String = "Example of body goes here."
+        var noteTitle: String = notes[position].title
+        var noteBody: String = notes[position].body
 
-        viewHolder.noteTitle?.setText(noteTitle, TextView.BufferType.EDITABLE)
-        viewHolder.noteBody?.setText(noteBody, TextView.BufferType.EDITABLE)
+        viewHolder.noteTitle?.setText(noteTitle)
+        viewHolder.noteBody?.setText(noteBody)
 
         return view as View
     }

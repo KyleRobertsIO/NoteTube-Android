@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import kotlinx.android.synthetic.main.note_card_edit_fragment.view.*
 import com.google.android.material.textfield.TextInputLayout
 import java.lang.Exception
 import java.util.*
@@ -34,16 +35,29 @@ class NoteCardEditDialog : DialogFragment() {
             false
         )
 
-        noteBodyField = rootView.findViewById<TextInputLayout>(R.id.noteBodyField)
 
-        noteBodyField.setEndIconOnClickListener {
-            if (allPermissionsGranted()) {
-                speak()
-            } else {
-                ActivityCompat.requestPermissions(
-                   activity as Activity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
-                )
-            }
+        val note = arguments?.getSerializable("NOTE")
+        noteBodyField = rootView.findViewById<TextInputLayout>(R.id.noteBodyField)
+          
+       noteBodyField.setEndIconOnClickListener {
+          if (allPermissionsGranted()) {
+              speak()
+          } else {
+              ActivityCompat.requestPermissions(
+                 activity as Activity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+              )
+          }
+       }
+          
+        // Handle dialog actions
+        rootView.saveNoteBtn.setOnClickListener()
+        {
+
+        }
+
+        rootView.cancelDialogBtn.setOnClickListener()
+        {
+            dismiss()
         }
 
         return rootView

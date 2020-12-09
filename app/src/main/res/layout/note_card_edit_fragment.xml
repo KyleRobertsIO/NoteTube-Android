@@ -22,7 +22,7 @@
             >
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/dialogTitleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Editing Note"
@@ -39,6 +39,7 @@
                 android:hint="Note Title">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/noteTitleEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black" />
@@ -57,6 +58,7 @@
                 app:endIconContentDescription="Start Voice Dictation">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/noteBodyEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
@@ -71,27 +73,27 @@
                 android:layout_marginTop="15dp">
 
                 <Button
+                    android:id="@+id/cancelDialogBtn"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_alignParentLeft="true"
-                    android:text="Cancel"
-                    app:elevation="0dp"
                     android:backgroundTint="@android:color/transparent"
+                    android:text="Cancel"
                     android:textColor="@color/colorPrimary"
-                    />
+                    app:elevation="0dp" />
 
                 <Button
+                    android:id="@+id/saveNoteBtn"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_baseline_save_24"
-                    app:iconTint="@color/colorPrimary"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_alignParentRight="true"
-                    android:text="Save Note"
                     android:backgroundTint="@android:color/transparent"
+                    android:text="Save Note"
                     android:textColor="@color/colorPrimary"
-                    />
+                    app:icon="@drawable/ic_baseline_save_24"
+                    app:iconTint="@color/colorPrimary" />
 
             </RelativeLayout>
 

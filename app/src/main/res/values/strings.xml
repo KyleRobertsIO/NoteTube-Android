@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NoteTube-Android</string>
     <string name="documents_view_title">Documents</string>
+    <string name="primary_url">http://159.203.10.79</string>
 </resources>
