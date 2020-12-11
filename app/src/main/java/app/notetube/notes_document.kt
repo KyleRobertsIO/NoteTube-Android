@@ -33,17 +33,22 @@ class notes_document : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes_document)
 
+        // Load intent content
+        val documentItem : Document = intent.getSerializableExtra(
+            "VIDEO_DOCUMENT") as Document
+
         // Activity variables
-        var currDocument : Document? = null
+        var currDocument : Document? = documentItem
 
         // View elements
         val noteListView : ListView = findViewById(R.id.notes_list_view) as ListView
 
         // Run thread to load initial listview
-        val thread = Thread(Runnable {
+        val thread = Thread(Runnable
+        {
             try
             {
-                currDocument = RequestDocumentById(1)
+                currDocument = RequestDocumentById(currDocument!!.id)
                 // Load listview
                 if (currDocument?.notes != null)
                 {
@@ -60,53 +65,25 @@ class notes_document : AppCompatActivity() {
         })
         thread.start()
 
-        val testBtn : Button = findViewById(R.id.testDialog)
-
-        var documentItem : DocumentListItem = intent.getSerializableExtra(
-            "VIDEO_DOCUMENT") as DocumentListItem
-
+        // Load Youtube video player
         val youtubePlayerView : YouTubePlayerView = findViewById(
             R.id.youtube_player_view) as YouTubePlayerView
         getLifecycle().addObserver(youtubePlayerView)
 
+        // Youtube player listener
         youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youtubePlayer: YouTubePlayer) {
-                youtubePlayer.loadVideo(documentItem.videoId, 0f)
+                youtubePlayer.loadVideo(currDocument!!.youtubeVideoId, 0f)
                 youtubePlayer.pause()
             }
         })
 
-
-        // Load notes
-        /*
-        val noteListView : ListView = findViewById(R.id.notes_list_view) as ListView
-        val adapter = NoteListAdapter(this, strArr)
-        noteListView.adapter = adapter
-        */
-
+        // Handle click of note card
         noteListView.setOnItemClickListener { parent, view, position, id ->
-
-        }
-
-
-
-        testBtn.setOnClickListener() {
-//            if (!allPermissionsGranted()) {
-//                ActivityCompat.requestPermissions(
-//                    this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
-//            }
-
-            var dialog = NoteCardEditDialog()
-            val args : Bundle = Bundle()
-            args.putSerializable("NOTE", null)
-            dialog.arguments = args
-            dialog.show(supportFragmentManager, "Edit Note Dialog")
-
-            /*val tranaction = supportFragmentManager.beginTransaction()
-            tranaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            tranaction.add(android.R.id.content, dialog)
-                .addToBackStack(null)
-                .commit()*/
+            OpenEditNoteDialog(
+                currDocument!!.notes!!.get(position),
+                currDocument!!.id
+            )
         }
 
     }
@@ -120,12 +97,22 @@ class notes_document : AppCompatActivity() {
         ContextCompat.checkSelfPermission(
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
-  
-    fun RequestDocumentById(documentId: Int) : Document? {
+
+    private fun OpenEditNoteDialog(selectNote: Note, documentId: Int)
+    {
+        var dialog = NoteCardEditDialog()
+        val args : Bundle = Bundle()
+        args.putSerializable("DOCUMENT_ID", documentId)
+        args.putSerializable("NOTE", selectNote)
+        dialog.arguments = args
+        dialog.show(supportFragmentManager, "Edit Note Dialog")
+    }
+
+    private fun RequestDocumentById(documentId: Int) : Document?
+    {
         // Create URI
         val url : String = getString(R.string.primary_url)
         val uri : String = url + "/document/" + documentId
-        println(uri)
         // Request service
         val client : OkHttpClient = OkHttpClient()
         val request : Request = Request.Builder()

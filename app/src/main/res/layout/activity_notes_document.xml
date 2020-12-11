@@ -23,12 +23,6 @@
             app:showFullScreenButton="true"
             app:videoId=""/>
 
-        <Button
-            android:id="@+id/testDialog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
-
         <ListView
             android:id="@+id/notes_list_view"
             android:layout_width="match_parent"
