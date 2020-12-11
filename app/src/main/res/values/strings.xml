@@ -3,4 +3,5 @@
     <string name="documents_view_title">Documents</string>
     <string name="primary_url">http://159.203.10.79</string>
     <string name="no_account_register_here"><u>No account? Register here.</u></string>
+    <string name="already_registered_login_here"><u>Already registered? Login here.</u></string>
 </resources>
