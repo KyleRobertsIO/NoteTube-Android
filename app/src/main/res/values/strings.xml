@@ -2,13 +2,11 @@
     <string name="app_name">NoteTube-Android</string>
     <string name="documents_view_title">Documents</string>
     <string name="primary_url">http://159.203.10.79</string>
-<<<<<<< HEAD
 
+    <string name="no_account_register_here"><u>No account? Register here.</u></string>
+    <string name="already_registered_login_here"><u>Already registered? Login here.</u></string>
+  
     <!--Toast messages-->
     <string name="toast_connection_error">Connection Error</string>
     <string name="toast_editing_note_unchanged">Note Unchanged</string>
-=======
-    <string name="no_account_register_here"><u>No account? Register here.</u></string>
-    <string name="already_registered_login_here"><u>Already registered? Login here.</u></string>
->>>>>>> 63456e143acc1992c9907b3e0514c2efda46ce2f
 </resources>
