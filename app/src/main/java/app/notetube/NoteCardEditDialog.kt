@@ -10,15 +10,25 @@ import android.speech.RecognizerIntent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.synthetic.main.note_card_edit_fragment.view.*
+import app.notetube.adapters.NoteListAdapter
+import app.notetube.models.api.Note
 import com.google.android.material.textfield.TextInputLayout
-import java.lang.Exception
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.note_card_edit_fragment.view.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.lang.reflect.Type
 import java.util.*
+
 
 class NoteCardEditDialog : DialogFragment() {
 
@@ -29,17 +39,28 @@ class NoteCardEditDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         var rootView: View = inflater.inflate(
             R.layout.note_card_edit_fragment,
             container,
             false
         )
 
+        //*******************************************
+        //    Get passed arguments
+        //*******************************************
+        val currEditingNote : Note = arguments?.getSerializable("NOTE") as Note
+        val documentId : Int = arguments?.getInt("DOCUMENT_ID") as Int
 
-        val note = arguments?.getSerializable("NOTE")
         noteBodyField = rootView.findViewById<TextInputLayout>(R.id.noteBodyField)
-          
-       noteBodyField.setEndIconOnClickListener {
+
+        val noteTitleEditText : EditText = rootView.findViewById(R.id.noteTitleEditText)
+        val noteBodyEditText : EditText = rootView.findViewById(R.id.noteBodyEditText)
+
+        noteTitleEditText.setText(currEditingNote.title)
+        noteBodyEditText.setText(currEditingNote.body)
+
+        noteBodyField.setEndIconOnClickListener {
           if (allPermissionsGranted()) {
               speak()
           } else {
@@ -48,13 +69,41 @@ class NoteCardEditDialog : DialogFragment() {
               )
           }
        }
-          
+
+        //*******************************************
         // Handle dialog actions
+        //*******************************************
         rootView.saveNoteBtn.setOnClickListener()
         {
+            // Confirm note is updated
+            val tempUpdatedNote : Note = Note()
+            tempUpdatedNote.copy(currEditingNote)
 
+            tempUpdatedNote.title = noteTitleEditText.text.toString()
+            tempUpdatedNote.body = noteBodyEditText.text.toString()
+
+            if (!currEditingNote.equalsEdit(tempUpdatedNote)) {
+                // Start thread for HTTP request
+                val thread = Thread(Runnable {
+                    try {
+                        val updatedNote : Note? = RequestNoteUpdate(documentId, tempUpdatedNote)
+                        if(updatedNote != null) { currEditingNote.copy(updatedNote) }
+                        dismiss()
+                    } catch (e: Exception) { e.printStackTrace() }
+                })
+                thread.start()
+            }else{
+                Toast.makeText(
+                    context,
+                    getString(R.string.toast_editing_note_unchanged),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
+        //*******************************************
+        //  Cancel button for current editing note
+        //*******************************************
         rootView.cancelDialogBtn.setOnClickListener()
         {
             dismiss()
@@ -73,10 +122,9 @@ class NoteCardEditDialog : DialogFragment() {
         }
     }
 
-    /**
-     * A bunch of speech code under here
-     */
-
+    //*******************************************
+    // Android Speech API section
+    //*******************************************
     companion object { // Permissions
         private const val REQUEST_CODE_SPEECH_INPUT = 10
         private const val REQUEST_CODE_PERMISSIONS = 11
@@ -115,5 +163,50 @@ class NoteCardEditDialog : DialogFragment() {
                 }
             }
         }
+    }
+
+
+    //*******************************************
+    // Handling API Requests
+    //*******************************************
+    private fun RequestNoteUpdate(documentId: Int, note: Note) : Note? {
+        // Create URI
+        val url : String = getString(R.string.primary_url)
+        val uri : String = url + "/document/" + documentId + "/note"
+        // Create POST body
+        val requestBody = Gson()
+            .toJson(note)
+            .toString()
+            .toRequestBody()
+        // Request service
+        val client : OkHttpClient = OkHttpClient()
+        val request : Request = Request.Builder()
+            .method("PUT", requestBody)
+            .url(uri)
+            .addHeader(
+                "authorization",
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJub3RldHViZSIsImV4cCI6MTYwODcwMjE0MCwidXNlcklkIjoxfQ.X3ZLeXdNJYMRCN8eTQrJcvD7wtZW-ggmbtf6OP4qLoM"
+            )
+            .addHeader("content-type", "application/json")
+            .build()
+
+        // Handle HTTP response
+        val response : Response = client.newCall(request).execute()
+        var updatedNote : Note? = null
+        if (response.isSuccessful)
+        {
+            val jsonObj : JSONObject = JSONObject(response.body?.string())
+            updatedNote = Gson().fromJson(jsonObj.toString(), Note::class.java)
+        }
+        else
+        {
+            val jsonObj : JSONObject = JSONObject(response.body?.string())
+            Toast.makeText(
+                context,
+                getString(R.string.toast_connection_error),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        return updatedNote
     }
 }
