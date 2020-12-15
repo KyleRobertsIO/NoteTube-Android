@@ -25,7 +25,7 @@
                 android:id="@+id/dialogTitleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Editing Note"
+                android:text="New Document"
                 android:textColor="#000000"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:hint="Note Title">
+                android:hint="Document Title">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/noteTitleEditText"
@@ -52,10 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:hint="Note Body"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_baseline_mic_24_70"
-                app:endIconContentDescription="Start Voice Dictation">
+                android:hint="YouTube Link" >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/noteBodyEditText"
@@ -90,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:backgroundTint="@android:color/transparent"
-                    android:text="Save Note"
+                    android:text="Save Document"
                     android:textColor="@color/colorPrimary"
                     app:icon="@drawable/ic_baseline_save_24"
                     app:iconTint="@color/colorPrimary" />
