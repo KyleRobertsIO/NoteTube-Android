@@ -44,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         // Screen elements
         val documentListView : ListView = findViewById<ListView>(R.id.documentListView)
-        val logoutButton = findViewById<ExtendedFloatingActionButton>(R.id.logoutFab)
         val newDocument = findViewById<ExtendedFloatingActionButton>(R.id.addFab)
 
         // Toolbar setup
@@ -79,14 +78,7 @@ class MainActivity : AppCompatActivity() {
         documentListView.setOnItemClickListener { parent, view, position, id ->
             val intent = Intent(this, notes_document::class.java)
             var selectedDocument : Document = parent.adapter.getItem(position) as Document
-            //intent.putExtra("VIDEO_DOCUMENT", currUser?.documents?.get(position))
             intent.putExtra("VIDEO_DOCUMENT", selectedDocument)
-            startActivity(intent)
-        }
-
-        logoutButton.setOnClickListener {
-            sharedPreference.clearSharedPreference()
-            val intent = Intent(this@MainActivity, MainActivity::class.java)
             startActivity(intent)
         }
 
@@ -124,6 +116,24 @@ class MainActivity : AppCompatActivity() {
         })
 
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle presses on the action bar menu items
+        when (item.itemId) {
+            R.id.action_logout -> {
+                LogoutUser(SharedPreference(this))
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun LogoutUser(sharedPreference : SharedPreference)
+    {
+        sharedPreference.clearSharedPreference()
+        val intent = Intent(this@MainActivity, MainActivity::class.java)
+        startActivity(intent)
     }
 
     fun RequestUserData() : User?

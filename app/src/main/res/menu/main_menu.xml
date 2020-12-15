@@ -11,9 +11,8 @@
         app:showAsAction="always" />
 
 
-<!--    <item-->
-<!--        android:id="@+id/app_bar_menu"-->
-<!--        android:title="@string/logout"-->
-<!--        app:showAsAction="collapseActionView|withText"-->
-<!--        />-->
+    <item
+        android:id="@+id/action_logout"
+        android:title="Logout"
+        app:showAsAction="never"/>
 </menu>
