@@ -41,7 +41,7 @@ class notes_document : AppCompatActivity() {
         var currDocument : Document? = documentItem
 
         // View elements
-        val noteListView : ListView = findViewById(R.id.notes_list_view) as ListView
+        val noteListView : ListView = findViewById<ListView>(R.id.notes_list_view)
 
         // Run thread to load initial listview
         val thread = Thread(Runnable
@@ -53,9 +53,9 @@ class notes_document : AppCompatActivity() {
                 if (currDocument?.notes != null)
                 {
                     val adapter = NoteListAdapter(this, currDocument!!.notes)
-                    runOnUiThread({
+                    runOnUiThread {
                         noteListView.adapter = NoteListAdapter(this, currDocument!!.notes)
-                    })
+                    }
                 }
             }
             catch (e: Exception)
@@ -66,9 +66,9 @@ class notes_document : AppCompatActivity() {
         thread.start()
 
         // Load Youtube video player
-        val youtubePlayerView : YouTubePlayerView = findViewById(
-            R.id.youtube_player_view) as YouTubePlayerView
-        getLifecycle().addObserver(youtubePlayerView)
+        val youtubePlayerView : YouTubePlayerView = findViewById<YouTubePlayerView>(
+            R.id.youtube_player_view)
+        lifecycle.addObserver(youtubePlayerView)
 
         // Youtube player listener
         youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
@@ -110,6 +110,8 @@ class notes_document : AppCompatActivity() {
 
     private fun RequestDocumentById(documentId: Int) : Document?
     {
+        val sharedPreference = SharedPreference(this)
+
         // Create URI
         val url : String = getString(R.string.primary_url)
         val uri : String = url + "/document/" + documentId
@@ -119,7 +121,7 @@ class notes_document : AppCompatActivity() {
             .url(uri)
             .addHeader(
             "authorization",
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJub3RldHViZSIsImV4cCI6MTYwODcwMjE0MCwidXNlcklkIjoxfQ.X3ZLeXdNJYMRCN8eTQrJcvD7wtZW-ggmbtf6OP4qLoM"
+            "Bearer ${sharedPreference.getValueString("JWT")}"
             )
             .build()
         // Handle response

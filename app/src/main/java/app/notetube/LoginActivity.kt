@@ -88,6 +88,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        //Dont go back
+    }
+
     private fun loginUser(requestBody: LoginPayload): String {
         // Create URI
         val url : String = getString(R.string.primary_url)
