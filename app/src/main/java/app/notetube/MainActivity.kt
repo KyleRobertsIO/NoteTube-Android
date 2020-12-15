@@ -27,6 +27,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val sharedPreference = SharedPreference(this)
+
+        if (sharedPreference.getValueBool("isLoggedIn") == false) {
+            val intent = Intent(this@MainActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
         // Activity variables
         var currUser : User? = null
 
@@ -46,12 +53,12 @@ class MainActivity : AppCompatActivity() {
                 if (currUser?.documents != null)
                 {
                     val adapter = DocumentListAdapter(this, currUser!!.documents)
-                    runOnUiThread({
+                    runOnUiThread {
                         documentListView.adapter = DocumentListAdapter(
                             this,
                             currUser!!.documents
                         )
-                    })
+                    }
                 }
             }
             catch (e: Exception)
@@ -68,6 +75,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    override fun onBackPressed() {
+        //Dont go back
     }
 
     // Implement the appbar toolbar into the activity

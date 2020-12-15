@@ -9,4 +9,10 @@
     <!--Toast messages-->
     <string name="toast_connection_error">Connection Error</string>
     <string name="toast_editing_note_unchanged">Note Unchanged</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="field_required">Field required.</string>
+    <string name="email">Email</string>
+    <string name="notetube">NoteTube</string>
+    <string name="password">Password</string>
 </resources>

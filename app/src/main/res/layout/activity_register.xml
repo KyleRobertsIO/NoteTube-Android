@@ -41,6 +41,22 @@
             android:inputType="textWebEmailAddress"
             android:textColor="@android:color/black" />
 
+        <TextView
+            android:id="@+id/emailErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/invalid_email"
+            android:textColor="#E91E47"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/emptyEmailErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/field_required"
+            android:textColor="#E91E47"
+            android:visibility="gone" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -57,6 +73,22 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/passwordErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/passwords_do_not_match"
+            android:textColor="#E91E47"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/emptyPasswordErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/field_required"
+            android:textColor="#E91E47"
+            android:visibility="gone" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,17 +107,25 @@
             android:inputType="textPassword"
             android:textColor="@android:color/black" />
 
+        <TextView
+            android:id="@+id/emptyConfirmPasswordErrorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/field_required"
+            android:textColor="#E91E47"
+            android:visibility="gone" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/loginButton"
+        android:id="@+id/submitRegisterButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         tools:text="Register" />
 
     <Button
-        android:id="@+id/registerButton"
+        android:id="@+id/goToLoginButton"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

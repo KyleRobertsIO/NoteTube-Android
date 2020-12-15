@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -170,22 +171,26 @@ class NoteCardEditDialog : DialogFragment() {
     // Handling API Requests
     //*******************************************
     private fun RequestNoteUpdate(documentId: Int, note: Note) : Note? {
+        val sharedPreference = SharedPreference(activity as Activity)
+
         // Create URI
         val url : String = getString(R.string.primary_url)
-        val uri : String = url + "/document/" + documentId + "/note"
+        val uri : String = "$url/document/$documentId/note"
+
         // Create POST body
         val requestBody = Gson()
             .toJson(note)
             .toString()
             .toRequestBody()
+
         // Request service
-        val client : OkHttpClient = OkHttpClient()
+        val client = OkHttpClient()
         val request : Request = Request.Builder()
             .method("PUT", requestBody)
             .url(uri)
             .addHeader(
                 "authorization",
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJub3RldHViZSIsImV4cCI6MTYwODcwMjE0MCwidXNlcklkIjoxfQ.X3ZLeXdNJYMRCN8eTQrJcvD7wtZW-ggmbtf6OP4qLoM"
+                "Bearer ${sharedPreference.getValueString("JWT")}"
             )
             .addHeader("content-type", "application/json")
             .build()
@@ -197,6 +202,8 @@ class NoteCardEditDialog : DialogFragment() {
         {
             val jsonObj : JSONObject = JSONObject(response.body?.string())
             updatedNote = Gson().fromJson(jsonObj.toString(), Note::class.java)
+
+            Log.d("JWT", jsonObj.toString())
         }
         else
         {
@@ -206,6 +213,7 @@ class NoteCardEditDialog : DialogFragment() {
                 getString(R.string.toast_connection_error),
                 Toast.LENGTH_SHORT
             ).show()
+            Log.d("JWT", jsonObj.toString())
         }
         return updatedNote
     }
