@@ -51,22 +51,11 @@
             android:layout_marginBottom="15dp"
             android:contentDescription="Add"
             android:cropToPadding="false"
-            android:text="@string/add"
             android:textColor="#FFFFFF"
             app:backgroundTint="@color/colorPrimary"
             app:icon="@drawable/ic_baseline_add_24"
             app:iconTint="#FFFFFF" />
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/logoutFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:contentDescription="Logout"
-            android:gravity="center"
-            android:text="@string/logout"
-            android:textColor="#FFFFFF"
-            app:backgroundTint="@color/colorPrimary" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
