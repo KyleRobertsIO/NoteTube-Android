@@ -74,7 +74,7 @@ class DocumentNewDialog : DialogFragment() {
                         val videoId = idRegex.find(video)?.groups?.get(7)
                         if (videoId != null) {
                             document = Document(0, docTitleField.editText?.text.toString(), videoId.value, 0, ArrayList<Note>())
-                            requestNewDocument(document)
+                            document = requestNewDocument(document)
 
                             activity?.runOnUiThread {
                                 documentArray.add(document)
@@ -127,12 +127,13 @@ class DocumentNewDialog : DialogFragment() {
     //*******************************************
     // Handling API Requests
     //*******************************************
-    private fun requestNewDocument(document: Document) {
+    private fun requestNewDocument(document: Document): Document {
         val sharedPreference = SharedPreference(activity as Activity)
 
         // Create URI
         val url : String = getString(R.string.primary_url)
         val uri = "$url/document"
+        var newDocument: Document = Document()
 
         // Create POST body
         val requestBody = Gson()
@@ -157,6 +158,7 @@ class DocumentNewDialog : DialogFragment() {
         if (response.isSuccessful)
         {
             val jsonObj : JSONObject = JSONObject(response.body?.string())
+            newDocument = Document(jsonObj.getInt("id"), jsonObj.getString("documentName"), jsonObj.getString("youtubeVideoId"), 0, ArrayList<Note>())
             Log.d("JWT", jsonObj.toString())
         }
         else
@@ -170,5 +172,7 @@ class DocumentNewDialog : DialogFragment() {
 
             Log.d("JWT", jsonObj.toString())
         }
+
+        return newDocument
     }
 }
