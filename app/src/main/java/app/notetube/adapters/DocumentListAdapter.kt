@@ -17,6 +17,9 @@ class DocumentListAdapter(
     private var documents: ArrayList<Document>
 ): BaseAdapter() {
 
+    private var filteredDocuments : ArrayList<Document> = ArrayList<Document>()
+    private var originalDocuments : ArrayList<Document> = ArrayList<Document>()
+
     private class ViewHolder(row: View?) {
 
         var listItemName: TextView? = null
@@ -24,6 +27,26 @@ class DocumentListAdapter(
         init {
             this.listItemName = row?.findViewById(R.id.listItemName)
         }
+    }
+
+    init {
+        this.originalDocuments.addAll(documents)
+    }
+
+    fun filter(charText : String) {
+        val lowerCharText = charText.toLowerCase()
+        documents.clear()
+        if (lowerCharText.length == 0){
+            documents.addAll(originalDocuments)
+        }else{
+            for (doc in originalDocuments){
+                if (doc.documentName.toLowerCase().contains(lowerCharText)) {
+                    filteredDocuments.add(doc)
+                }
+            }
+            documents = filteredDocuments
+        }
+        notifyDataSetChanged()
     }
 
     override fun getCount(): Int {
