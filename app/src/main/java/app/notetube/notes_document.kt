@@ -16,11 +16,13 @@ import app.notetube.adapters.NoteListAdapter
 import app.notetube.models.DocumentListItem
 import app.notetube.models.api.Document
 import app.notetube.models.api.Note
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.android.synthetic.main.activity_notes_document.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -42,6 +44,7 @@ class notes_document : AppCompatActivity() {
 
         // View elements
         val noteListView : ListView = findViewById<ListView>(R.id.notes_list_view)
+        val newNoteFab = findViewById<FloatingActionButton>(R.id.addFab)
 
         // Run thread to load initial listview
         val thread = Thread(Runnable
@@ -86,6 +89,9 @@ class notes_document : AppCompatActivity() {
             )
         }
 
+        addFab.setOnClickListener {
+            OpenNewNoteDialog(currDocument!!.id)
+        }
     }
   
     companion object { // Permissions
@@ -106,6 +112,15 @@ class notes_document : AppCompatActivity() {
         args.putSerializable("NOTE", selectNote)
         dialog.arguments = args
         dialog.show(supportFragmentManager, "Edit Note Dialog")
+    }
+
+    private fun OpenNewNoteDialog(documentId: Int)
+    {
+        var dialog = NoteCardNewDialog()
+        val args : Bundle = Bundle()
+        args.putSerializable("DOCUMENT_ID", documentId)
+        dialog.arguments = args
+        dialog.show(supportFragmentManager, "New Note Dialog")
     }
 
     private fun RequestDocumentById(documentId: Int) : Document?

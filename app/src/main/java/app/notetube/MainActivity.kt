@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import app.notetube.adapters.DocumentListAdapter
 import app.notetube.models.api.Document
+import app.notetube.models.api.Note
 import app.notetube.models.api.User
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.gson.Gson
@@ -25,16 +26,14 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.lang.reflect.Type
 
-
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Checks if user is logged in, if not, takes them to login page
         val sharedPreference = SharedPreference(this)
-
-
         if (sharedPreference.getValueBool("isLoggedIn") == false) {
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
@@ -46,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         // Screen elements
         val documentListView : ListView = findViewById<ListView>(R.id.documentListView)
         val logoutButton = findViewById<ExtendedFloatingActionButton>(R.id.logoutFab)
+        val newDocument = findViewById<ExtendedFloatingActionButton>(R.id.addFab)
 
         // Toolbar setup
         val mToolbar : Toolbar = findViewById(R.id.main_toolbar);
@@ -89,7 +89,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, MainActivity::class.java)
             startActivity(intent)
         }
+
+        newDocument.setOnClickListener {
+            OpenNewDocumentDialog()
+        }
     }
+
 
     override fun onBackPressed() {
         //Dont go back
@@ -164,4 +169,9 @@ class MainActivity : AppCompatActivity() {
         return user
     }
 
+    private fun OpenNewDocumentDialog()
+    {
+        var dialog = DocumentNewDialog()
+        dialog.show(supportFragmentManager, "New Document Dialog")
+    }
 }

@@ -84,7 +84,7 @@
                     app:elevation="0dp" />
 
                 <Button
-                    android:id="@+id/saveNoteBtn"
+                    android:id="@+id/saveNewNoteBtn"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
