@@ -16,24 +16,25 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import app.notetube.adapters.NoteListAdapter
 import app.notetube.models.api.Document
 import app.notetube.models.api.Note
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.document_card_new_fragment.view.*
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.note_card_edit_fragment.view.*
-import kotlinx.android.synthetic.main.note_card_edit_fragment.view.cancelDialogBtn
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONObject
+import java.lang.reflect.Type
 import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-import kotlin.collections.ArrayList
 
-class DocumentNewDialog : DialogFragment() {
+
+class NoteCardNewDialog : DialogFragment() {
+
+    private lateinit var noteBodyField: TextInputLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,34 +43,42 @@ class DocumentNewDialog : DialogFragment() {
     ): View? {
 
         var rootView: View = inflater.inflate(
-            R.layout.document_card_new_fragment,
+            R.layout.note_card_edit_fragment,
             container,
             false
         )
 
-        val docTitleField = rootView.findViewById<TextInputLayout>(R.id.docTitleField)
-        val linkField = rootView.findViewById<TextInputLayout>(R.id.linkField)
-        val ytRegex = Regex(pattern = "http(?:s?)://(?:www\\.)?youtu(?:be\\.com/watch\\?v=|\\.be/)([\\w\\-_]*)(&(amp;)?\u200C\u200B[\\w?\u200C\u200B=]*)?")
+        //*******************************************
+        //    Get passed arguments
+        //*******************************************
+        val documentId : Int = arguments?.getInt("DOCUMENT_ID") as Int
+
+        noteBodyField = rootView.findViewById<TextInputLayout>(R.id.noteBodyField)
+
+        val noteTitleEditText : EditText = rootView.findViewById(R.id.noteTitleEditText)
+        val noteBodyEditText : EditText = rootView.findViewById(R.id.noteBodyEditText)
+
+        noteBodyField.setEndIconOnClickListener {
+            if (allPermissionsGranted()) {
+                speak()
+            } else {
+                ActivityCompat.requestPermissions(
+                    activity as Activity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+                )
+            }
+        }
 
         //*******************************************
         // Handle dialog actions
         //*******************************************
-        rootView.saveDocumentBtn.setOnClickListener()
+        rootView.saveNoteBtn.setOnClickListener()
         {
-            if (docTitleField.editText?.text.toString().isNotEmpty()
-                && linkField.editText?.text.toString().isNotEmpty()
-                && linkField.editText?.text.toString().matches(ytRegex)) {
+            if (noteTitleEditText.text.toString().isNotEmpty() && noteBodyEditText.text.toString().isNotEmpty()) {
                 // Start thread for HTTP request
                 val thread = Thread(Runnable {
                     try {
-                        val idRegex = Regex(pattern = "^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#\\&\\?]*).*")
-                        val video = linkField.editText?.text.toString()
-                        val videoId = idRegex.find(video)?.groups?.get(7)
-                        if (videoId != null) {
-                            val document = Document(0, docTitleField.editText?.text.toString(), videoId.value, 0, ArrayList<Note>())
-                            requestNewDocument(document)
-                        }
-
+                        val note = Note(0, noteTitleEditText.text.toString(), noteBodyEditText.text.toString(), 0, 0, false)
+                        requestNewNote(note, documentId)
                         dismiss()
                     } catch (e: Exception) { e.printStackTrace() }
                 })
@@ -104,20 +113,64 @@ class DocumentNewDialog : DialogFragment() {
         }
     }
 
+    //*******************************************
+    // Android Speech API section
+    //*******************************************
+    companion object { // Permissions
+        private const val REQUEST_CODE_SPEECH_INPUT = 10
+        private const val REQUEST_CODE_PERMISSIONS = 11
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.INTERNET)
+    }
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        activity?.let { it1 ->
+            ContextCompat.checkSelfPermission(
+                it1.baseContext, it)
+        } == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun speak() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak!")
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT)
+        } catch(e: Exception) {
+            Toast.makeText(activity, "Error!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode) {
+            REQUEST_CODE_SPEECH_INPUT -> {
+                if (resultCode == Activity.RESULT_OK && null != data) {
+                    val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    noteBodyField.editText?.setText(result?.get(0))
+                }
+            }
+        }
+    }
+
 
     //*******************************************
     // Handling API Requests
     //*******************************************
-    private fun requestNewDocument(document: Document) {
+
+    private fun requestNewNote(note: Note, documentId: Int) {
         val sharedPreference = SharedPreference(activity as Activity)
 
         // Create URI
         val url : String = getString(R.string.primary_url)
-        val uri = "$url/document"
+        val uri = "$url/document/$documentId/note"
 
         // Create POST body
         val requestBody = Gson()
-            .toJson(document)
+            .toJson(note)
             .toString()
             .toRequestBody()
 
