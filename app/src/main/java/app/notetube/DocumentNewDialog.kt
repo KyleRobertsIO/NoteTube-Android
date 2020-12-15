@@ -47,6 +47,11 @@ class DocumentNewDialog : DialogFragment() {
             false
         )
 
+        //*******************************************
+        //    Get passed arguments
+        //*******************************************
+        val documentArray: ArrayList<Document> = arguments?.get("DOCUMENT_ARRAY") as ArrayList<Document>
+
         val docTitleField = rootView.findViewById<TextInputLayout>(R.id.docTitleField)
         val linkField = rootView.findViewById<TextInputLayout>(R.id.linkField)
         val ytRegex = Regex(pattern = "http(?:s?)://(?:www\\.)?youtu(?:be\\.com/watch\\?v=|\\.be/)([\\w\\-_]*)(&(amp;)?\u200C\u200B[\\w?\u200C\u200B=]*)?")
@@ -61,15 +66,20 @@ class DocumentNewDialog : DialogFragment() {
                 && linkField.editText?.text.toString().matches(ytRegex)) {
                 // Start thread for HTTP request
                 val thread = Thread(Runnable {
+                    var document = Document()
+
                     try {
                         val idRegex = Regex(pattern = "^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#\\&\\?]*).*")
                         val video = linkField.editText?.text.toString()
                         val videoId = idRegex.find(video)?.groups?.get(7)
                         if (videoId != null) {
-                            val document = Document(0, docTitleField.editText?.text.toString(), videoId.value, 0, ArrayList<Note>())
+                            document = Document(0, docTitleField.editText?.text.toString(), videoId.value, 0, ArrayList<Note>())
                             requestNewDocument(document)
-                        }
 
+                            activity?.runOnUiThread {
+                                documentArray.add(document)
+                            }
+                        }
                         dismiss()
                     } catch (e: Exception) { e.printStackTrace() }
                 })

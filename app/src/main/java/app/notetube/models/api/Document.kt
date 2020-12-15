@@ -23,4 +23,6 @@ class Document: Serializable {
         this.createDate = createdDate
         this.notes = notes
     }
+
+    constructor()
 }

@@ -82,15 +82,15 @@ class notes_document : AppCompatActivity() {
         })
 
         // Handle click of note card
-        noteListView.setOnItemClickListener { parent, view, position, id ->
+        noteListView.setOnItemClickListener { parent, view, position, _ ->
             OpenEditNoteDialog(
-                currDocument!!.notes!!.get(position),
+                currDocument!!.notes.get(position),
                 currDocument!!.id
             )
         }
 
         addFab.setOnClickListener {
-            OpenNewNoteDialog(currDocument!!.id)
+            OpenNewNoteDialog(currDocument!!.id, currDocument!!)
         }
     }
   
@@ -114,11 +114,12 @@ class notes_document : AppCompatActivity() {
         dialog.show(supportFragmentManager, "Edit Note Dialog")
     }
 
-    private fun OpenNewNoteDialog(documentId: Int)
+    private fun OpenNewNoteDialog(documentId: Int, currDocument: Document)
     {
         var dialog = NoteCardNewDialog()
         val args : Bundle = Bundle()
         args.putSerializable("DOCUMENT_ID", documentId)
+        args.putSerializable("NOTE_ARRAY", currDocument.notes)
         dialog.arguments = args
         dialog.show(supportFragmentManager, "New Note Dialog")
     }

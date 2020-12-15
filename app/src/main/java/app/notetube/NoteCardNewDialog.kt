@@ -30,6 +30,7 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.lang.reflect.Type
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class NoteCardNewDialog : DialogFragment() {
@@ -43,7 +44,7 @@ class NoteCardNewDialog : DialogFragment() {
     ): View? {
 
         var rootView: View = inflater.inflate(
-            R.layout.note_card_edit_fragment,
+            R.layout.note_card_new_fragment,
             container,
             false
         )
@@ -51,6 +52,7 @@ class NoteCardNewDialog : DialogFragment() {
         //*******************************************
         //    Get passed arguments
         //*******************************************
+        val noteArray: ArrayList<Note> = arguments?.get("NOTE_ARRAY") as ArrayList<Note>
         val documentId : Int = arguments?.getInt("DOCUMENT_ID") as Int
 
         noteBodyField = rootView.findViewById<TextInputLayout>(R.id.noteBodyField)
@@ -79,6 +81,11 @@ class NoteCardNewDialog : DialogFragment() {
                     try {
                         val note = Note(0, noteTitleEditText.text.toString(), noteBodyEditText.text.toString(), 0, 0, false)
                         requestNewNote(note, documentId)
+
+                        activity?.runOnUiThread {
+                            noteArray.add(note)
+                        }
+
                         dismiss()
                     } catch (e: Exception) { e.printStackTrace() }
                 })

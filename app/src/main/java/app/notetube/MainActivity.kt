@@ -24,6 +24,9 @@ import java.lang.reflect.Type
 
 class MainActivity : AppCompatActivity() {
 
+    // Activity variables
+    var currUser : User? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,9 +37,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
         }
-
-        // Activity variables
-        var currUser : User? = null
 
         // Screen elements
         val documentListView : ListView = findViewById<ListView>(R.id.documentListView)
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         newDocument.setOnClickListener {
-            OpenNewDocumentDialog()
+            currUser?.let { it1 -> OpenNewDocumentDialog(it1) }
         }
     }
 
@@ -146,9 +146,12 @@ class MainActivity : AppCompatActivity() {
         return user
     }
 
-    private fun OpenNewDocumentDialog()
+    private fun OpenNewDocumentDialog(currUser: User)
     {
         var dialog = DocumentNewDialog()
+        val args : Bundle = Bundle()
+        args.putSerializable("DOCUMENT_ARRAY", currUser.documents)
+        dialog.arguments = args
         dialog.show(supportFragmentManager, "New Document Dialog")
     }
 }
