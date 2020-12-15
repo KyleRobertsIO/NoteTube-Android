@@ -1,13 +1,17 @@
 package app.notetube
 
+import android.R.id
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ListView
-import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
+import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import app.notetube.adapters.DocumentListAdapter
 import app.notetube.models.api.Document
 import app.notetube.models.api.Note
@@ -74,7 +78,9 @@ class MainActivity : AppCompatActivity() {
         // Click listview item
         documentListView.setOnItemClickListener { parent, view, position, id ->
             val intent = Intent(this, notes_document::class.java)
-            intent.putExtra("VIDEO_DOCUMENT", currUser?.documents?.get(position))
+            var selectedDocument : Document = parent.adapter.getItem(position) as Document
+            //intent.putExtra("VIDEO_DOCUMENT", currUser?.documents?.get(position))
+            intent.putExtra("VIDEO_DOCUMENT", selectedDocument)
             startActivity(intent)
         }
 
@@ -99,6 +105,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.main_menu, menu)
 
+        val search : MenuItem? = menu?.findItem(R.id.app_bar_search)
+        val searchView : SearchView = search?.actionView as SearchView
+        searchView.queryHint = "Find document"
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                var adapter : DocumentListAdapter = documentListView.adapter as DocumentListAdapter
+                if (newText != null) {
+                    adapter.filter(newText)
+                }
+                return true
+            }
+        })
 
         return true
     }
