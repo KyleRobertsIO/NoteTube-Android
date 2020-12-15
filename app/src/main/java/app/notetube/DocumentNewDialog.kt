@@ -85,11 +85,20 @@ class DocumentNewDialog : DialogFragment() {
                 })
                 thread.start()
             }else{
-                Toast.makeText(
-                    context,
-                    getString(R.string.toast_editing_note_unchanged),
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (docTitleField.editText?.text.toString().isEmpty()
+                    && linkField.editText?.text.toString().isEmpty()) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.toast_editing_note_unchanged),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (!linkField.editText?.text.toString().matches(ytRegex)) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.valid_link),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
 
